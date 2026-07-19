@@ -1,1 +1,70 @@
+<?php
+// 1. Deklarasi Array Asosiatif (Nama => Nilai)
+$data_mahasiswa = [
+    "Hanif" => 95,
+    "Budi" => 80,
+    "Siti" => 88,
+    "Andi" => 75,
+    "Rani" => 90
+];
 
+// 2. Custom Function untuk menghitung rata-rata nilai
+function hitungRataRata($array_nilai) {
+    $total = array_sum($array_nilai);
+    $jumlah_data = count($array_nilai); // Fungsi count() array
+    return $jumlah_data > 0 ? ($total / $jumlah_data) : 0;
+}
+
+$mode_urut = $_POST['urut'] ?? 'default';
+$cari_nama = $_POST['cari_nama'] ?? '';
+$pesan_cari = "";
+
+// 3. Penerapan Fungsi Pengurutan Array (Sorting)
+if ($mode_urut == 'asc') {
+    asort($data_mahasiswa); // Mengurutkan nilai menaik (asort)
+} elseif ($mode_urut == 'desc') {
+    arsort($data_mahasiswa); // Mengurutkan nilai menurun (arsort)
+}
+
+// 4. Penerapan Fungsi Pencarian Array
+if (!empty($cari_nama)) {
+    if (array_key_exists($cari_nama, $data_mahasiswa)) {
+        $pesan_cari = "<p style='color:green;'>Mahasiswa <b>$cari_nama</b> ditemukan. Nilai: <b>".$data_mahasiswa[$cari_nama]."</b></p>";
+    } else {
+        $pesan_cari = "<p style='color:red;'>Mahasiswa '$cari_nama' tidak ditemukan.</p>";
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tugas 13 - Array & Function</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; }
+        .box { max-width: 500px; background: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table, th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #333; color: white; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Sistem Nilai Mahasiswa</h2>
+    <form action="" method="POST">
+        <input type="text" name="cari_nama" placeholder="Cari nama..." value="<?php echo htmlspecialchars($cari_nama); ?>">
+        <input type="submit" value="Cari"><br><br>
+        <button type="submit" name="urut" value="asc">Nilai Terendah (asort)</button>
+        <button type="submit" name="urut" value="desc">Nilai Tertinggi (arsort)</button>
+    </form>
+    <?php echo $pesan_cari; ?>
+    <table>
+        <tr><th>Nama</th><th>Nilai</th></tr>
+        <?php foreach ($data_mahasiswa as $nama => $nilai) : ?>
+            <tr><td><?php echo $nama; ?></td><td><?php echo $nilai; ?></td></tr>
+        <?php endforeach; ?>
+    </table>
+    <p><b>Total Mahasiswa:</b> <?php echo count($data_mahasiswa); ?></p>
+    <p><b>Rata-rata Nilai:</b> <?php echo hitungRataRata($data_mahasiswa); ?></p>
+</div>
+</body>
+</html>
